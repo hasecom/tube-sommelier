@@ -6,7 +6,7 @@ const RegistForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleRegister = () => {
+  const handleRegister = async() => {
     if (userId.length < 5) {
       alert('ユーザIDは5文字以上必要です。');
     } else if (!email.includes('@')) {
@@ -14,7 +14,21 @@ const RegistForm = () => {
     } else if (password.length < 5 || !/^[0-9a-zA-Z]+$/.test(password)) {
       alert('パスワードは5文字以上の英数字で入力してください。');
     } else {
-      // 登録処理をここに追加
+      const response = await fetch(process.env.NEXT_PUBLIC_API_PATH + 'api/regist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({userId,email,password}),
+      });
+      if (response.ok) {
+        // ログイン成功時の処理
+        console.log(response)
+        //window.location.href = '/mypage'; // マイページへの遷移
+      } else {
+        // ログイン失敗時の処理
+        alert('ログインに失敗しました。');
+      }
     }
   };
 

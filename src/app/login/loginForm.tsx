@@ -19,7 +19,8 @@ const LoginForm = () => {
 
       if (response.ok) {
         // ログイン成功時の処理
-        window.location.href = '/mypage'; // マイページへの遷移
+        console.log(response)
+        //window.location.href = '/mypage'; // マイページへの遷移
       } else {
         // ログイン失敗時の処理
         alert('ログインに失敗しました。');
