@@ -1,33 +1,44 @@
 'use client';
 import { useState } from 'react';
+import { useParams,useRouter } from 'next/navigation';
 
 const RegistForm = () => {
+  const router = useRouter();
   const [userId, setUserId] = useState('');
+  const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleRegister = async() => {
-    if (userId.length < 5) {
+    if(userName == ""){
+      alert('ユーザ名を入力してください。');
+    }else if (userId.length < 5) {
       alert('ユーザIDは5文字以上必要です。');
     } else if (!email.includes('@')) {
       alert('有効なメールアドレスを入力してください。');
     } else if (password.length < 5 || !/^[0-9a-zA-Z]+$/.test(password)) {
       alert('パスワードは5文字以上の英数字で入力してください。');
     } else {
+      let params = new URLSearchParams();
+      params.append('email',email);
+      params.append('password',password);
+      params.append('userId',userId);
+      params.append('userName',userName);
       const response = await fetch(process.env.NEXT_PUBLIC_API_PATH + 'api/regist', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: JSON.stringify({userId,email,password}),
+        body:params,
       });
       if (response.ok) {
-        // ログイン成功時の処理
-        console.log(response)
-        //window.location.href = '/mypage'; // マイページへの遷移
+        const data = await response.json();
+        if(data.CODE){
+          router.push("/single/temp-regist-success",{ scroll: false });
+        }else{
+        }
       } else {
-        // ログイン失敗時の処理
-        alert('ログインに失敗しました。');
+        router.push("/single/error",{ scroll: false });
       }
     }
   };
@@ -46,6 +57,18 @@ const RegistForm = () => {
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-theme"
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="userName" className="block text-sm font-medium text-gray-600">
+            ユーザ名
+          </label>
+          <input
+            type="text"
+            id="userName"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-theme"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
           />
         </div>
         <div className="mb-4">
