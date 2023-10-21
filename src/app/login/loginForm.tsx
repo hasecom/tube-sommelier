@@ -1,29 +1,39 @@
 'use client';
 import { useState } from 'react';
+import { useParams,useRouter } from 'next/navigation';
 
 const LoginForm = () => {
+  const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState('');
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
+  let params = new URLSearchParams();
 
   const handleLogin = async() => {
+    params.append('userId',userId);
+    params.append('password',password);
     if (!userId || !password) {
-      alert('ユーザIDとパスワードは入力必須です。');
+      setErrorMessage('ユーザIDとパスワードは入力必須です。');
     } else {
       const response = await fetch(process.env.NEXT_PUBLIC_API_PATH + 'api/login', {
         method: 'POST',
+        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: JSON.stringify({userId,password}),
+        body:params,
       });
-
       if (response.ok) {
         // ログイン成功時の処理
-        console.log(response)
-        //window.location.href = '/mypage'; // マイページへの遷移
+        const data = await response.json();
+        if(data.CODE){
+          setErrorMessage('');
+        //  router.push("/mypage",{ scroll: false });
+        }else{
+          setErrorMessage(data.MESSAGE);
+        }
       } else {
-        // ログイン失敗時の処理
-        alert('ログインに失敗しました。');
+        setErrorMessage('サーバーエラーが発生しました。再試行してください。');
       }
     }
   };
@@ -56,6 +66,7 @@ const LoginForm = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+        {errorMessage && <p className="text-red-500 text-sm py-2 text-center">{errorMessage}</p>}
         <button
           onClick={handleLogin}
           className="w-full bg-theme text-white p-3 rounded-md bg-red-500 hover:bg-red-300 focus:outline-none focus:ring focus:bg-red-300 mb-4"

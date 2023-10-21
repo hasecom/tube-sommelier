@@ -4,6 +4,7 @@ import { useParams,useRouter } from 'next/navigation';
 
 const RegistForm = () => {
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState('');
   const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
@@ -11,13 +12,13 @@ const RegistForm = () => {
 
   const handleRegister = async() => {
     if(userName == ""){
-      alert('ユーザ名を入力してください。');
+      setErrorMessage('ユーザ名を入力してください。');
     }else if (userId.length < 5) {
-      alert('ユーザIDは5文字以上必要です。');
+      setErrorMessage('ユーザIDは5文字以上必要です。');
     } else if (!email.includes('@')) {
-      alert('有効なメールアドレスを入力してください。');
+      setErrorMessage('有効なメールアドレスを入力してください。');
     } else if (password.length < 5 || !/^[0-9a-zA-Z]+$/.test(password)) {
-      alert('パスワードは5文字以上の英数字で入力してください。');
+      setErrorMessage('パスワードは5文字以上の英数字で入力してください。');
     } else {
       let params = new URLSearchParams();
       params.append('email',email);
@@ -36,6 +37,7 @@ const RegistForm = () => {
         if(data.CODE){
           router.push("/single/temp-regist-success",{ scroll: false });
         }else{
+          setErrorMessage(data.MESSAGE);
         }
       } else {
         router.push("/single/error",{ scroll: false });
@@ -95,6 +97,7 @@ const RegistForm = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+        {errorMessage && <p className="text-red-500 text-sm py-2 text-center">{errorMessage}</p>}
         <button
           onClick={handleRegister}
           className="w-full bg-theme text-white p-3 rounded-md bg-red-500 hover:bg-red-300 focus:outline-none focus:ring focus:bg-red-300 mb-4"
