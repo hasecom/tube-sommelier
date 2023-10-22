@@ -28,7 +28,7 @@ const LoginForm = () => {
         const data = await response.json();
         if(data.CODE){
           setErrorMessage('');
-        //  router.push("/mypage",{ scroll: false });
+          router.push("/mypage",{ scroll: false });
         }else{
           setErrorMessage(data.MESSAGE);
         }

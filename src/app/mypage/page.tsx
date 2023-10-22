@@ -1,6 +1,7 @@
 'use client';
+import { useParams,useRouter } from 'next/navigation';
 const Mypage = () => {
-
+  const router = useRouter();
   async function postData() {
     // let params = new URLSearchParams();
     // params.append('uid',"a");
@@ -8,7 +9,7 @@ const Mypage = () => {
       key1: 'value1',
       key2: 'value2'
     };
-    const response = await fetch(process.env.NEXT_PUBLIC_API_PATH + 'api/auth/sync', {
+    const response = await fetch(process.env.NEXT_PUBLIC_API_PATH + 'api/mypage', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -17,8 +18,17 @@ const Mypage = () => {
       body:JSON.stringify(jsonData)
     });
     if (response.ok) {
+      // 認証成功時の処理
       const data = await response.json();
-      console.log(data)
+      console.log(data.CODE)
+      if(data.CODE){
+
+      
+      }else{
+        router.push("/login",{ scroll: false });
+      }
+    } else {
+      router.push("/login",{ scroll: false });
     }
 }
 postData();
