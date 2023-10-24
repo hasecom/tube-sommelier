@@ -3,38 +3,46 @@ import React, { useEffect, useState } from 'react';
 import Content from '@/components/postComponents/_content';
 import Background from './_background';
 import FixedButton from './_button';
+import PostModal from './_postModal';
 const PostViewComponent = () => {
 
   const [showPostView, setShowPostView] = useState(false);
   const [animation, setAnimation] = useState(false);
-  
-  const toggleView = () => {
+  const [isModalView, setModalView] = useState(false);
+  const toggleView = () => { //投稿画面開閉
       setShowPostView(!showPostView);
       setAnimation(!animation);
   };
-
-  const closeViews = () => {
+  const closeViews = () => { //投稿画面閉じる
     setAnimation(false);
     setTimeout(() => {
       setShowPostView(false);
-    }, 800); 
+    }, 400); 
   };
-
+  const onModalClose = () =>{
+    setModalView(false)
+    closeViews();
+  }
+  const onOpenModal = () =>{
+    setModalView(true)
+  }
+  const onModalCancel = () =>{
+    setTimeout(() => {
+      setModalView(false);
+    },800);
+  }
   return (
     <div>
       <FixedButton toggleView={toggleView}/>
 
       {showPostView && (
         <>
-            {/* 要素Aの内容 */}
-            <Content showPostView={animation} />
-            <Background closeViews={closeViews} showPostView={animation} />
-            {/* <div className="p-4">
-              <p>要素A</p>
-              <button onClick={closeA} className="bg-red-500 text-white p-2 m-2">
-                閉じる
-              </button>
-            </div> */}
+            {isModalView && (
+              <PostModal onModalClose={onModalClose} onModalCancel={onModalCancel} />
+            )
+            }
+            <Content showPostView={animation} onOpenModal={onOpenModal}  />
+            <Background onOpenModal={onOpenModal} showPostView={animation} />
             </>
             )
             }
