@@ -1,15 +1,12 @@
 
 
 type Props = {
-  handleNextBtnClick: ()=>void
-  isNextBtnClickable:boolean,
-  onOpenModal:()=>void
+  onOpenModal:()=>void,
+  pageNumber:number,
+  returnPage:()=>void
 };
 
-const Header:React.FC<Props> = ({handleNextBtnClick,isNextBtnClickable,onOpenModal}) => {
-  const handleClick = () =>{
-    handleNextBtnClick();
-  }
+const Header:React.FC<Props> = ({onOpenModal,pageNumber,returnPage}) => {
   const handleCancelClick = ()=>{
     onOpenModal();
   }
@@ -23,15 +20,14 @@ const Header:React.FC<Props> = ({handleNextBtnClick,isNextBtnClickable,onOpenMod
                  sm:bottom-8 sm:right-8"
         onClick={handleCancelClick}
         >
-        <span className="i-lucide-x  text-2xl"></span>
+        <span className="i-lucide-x  text-lg"></span>
       </button>
-      <h2 className="text-2xl font-semibold mb-4 ">プレイリストを作成</h2>
-      <button 
-        className={`bg-${isNextBtnClickable ? 'primary' : 'gray-400'} text-white py-2 px-4 rounded-lg text-xl`}
-        onClick={handleClick}
-        disabled={!isNextBtnClickable}
-      >
-        次へ
+      <h2 className="font-semibold mb-4 text-2xl max-sm:text-lg">プレイリストを作成</h2>
+      <button
+          className={`${1 < pageNumber ? 'bg-white text-primary' : 'cursor-not-allowed text-white'}  p-2  rounded-lg text-xl`}
+          onClick={returnPage}
+          >
+          戻る
       </button>
     </header>
   );
