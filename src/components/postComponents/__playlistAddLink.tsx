@@ -17,7 +17,6 @@ const PlayListAddLink:React.FC<Props> = ({ setSelectVideos,selectVideos,handleNe
   const [isDataSuccessful, setIsDataSuccessful] = useState(false);//searchResultにデータが入ったか否か
   const [searchResult, setSearchResult] = useState<videoType[]>([]);//検索結果
   const [nextPageToken,setNextPageToken] = useState<string>('') ;//searchResultの続き
-  const router = useRouter();
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setNextPageToken("") //入力イベントがあればNextPageTokenを空にする。

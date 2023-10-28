@@ -8,3 +8,9 @@ export type videoType =  {
   ThumbnailsMediumUrl:string,
   ThumbnailsHighUrl:string,
 }
+
+export type formType = {
+  playlistTitle:string,
+  categoryCode:string,
+  videos:videoType[]
+}
