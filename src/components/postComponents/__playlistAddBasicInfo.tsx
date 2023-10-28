@@ -5,13 +5,9 @@ type Props = {
   nextPage:()=>void
 };
 const PlayListAddBasicInfo: React.FC<Props> = ({ handleNextBtnClick, isNextBtnClickable,nextPage }) => {
-  const [animate, setAnimate] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
   const [inputValue, setInputValue] = useState('');
 
-  const handle = () => {
-    setAnimate(!animate)
-  }
   const handleSelectChange = (e) => {
     setSelectedOption(e.target.value);
   };

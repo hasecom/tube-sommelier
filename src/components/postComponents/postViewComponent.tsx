@@ -5,7 +5,6 @@ import Background from './_background';
 import FixedButton from './_button';
 import PostModal from './_postModal';
 const PostViewComponent = () => {
-
   const [showPostView, setShowPostView] = useState(false);
   const [animation, setAnimation] = useState(false);
   const [isModalView, setModalView] = useState(false);
