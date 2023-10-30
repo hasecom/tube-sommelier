@@ -4,6 +4,8 @@ import PlayListAddBasicInfo from "./__playlistAddBasicInfo";
 import PlayListAddLink from './__playlistAddLink';
 import PlayListSortVideos from './__playlistSortVideos';
 import { videoType, formType } from '@/components/postComponents/searchType'
+import fetchDataUseAuth from '@/func/axios';
+
 type Props = {
   showPostView: boolean,
   onOpenModal: () => void,
@@ -11,6 +13,7 @@ type Props = {
   nextPage: () => void,
   returnPage: () => void
 };
+
 
 const Content: React.FC<Props> = ({ showPostView, onOpenModal, pageNumber, nextPage, returnPage }) => {
   const [isNextBtnClickable, setIsNextBtnClickable] = useState(false);//次へ
@@ -31,20 +34,14 @@ const Content: React.FC<Props> = ({ showPostView, onOpenModal, pageNumber, nextP
   useEffect(() => {
     handlePlaylistVideoChange(selectVideos)
   }, [selectVideos]);
+  
   const handleRegistPlayList = async() => {
-
-    const response = await fetch(process.env.NEXT_PUBLIC_API_PATH + 'api/playlist/add', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body:JSON.stringify(searchRequestData),
-      });
-      try {
-        if (!response.ok) { throw new Error('データの取得に失敗しました') };
-        const data = await response.json();
-        if (!data.CODE) { throw new Error('データの取得に失敗しました') };
-      } catch (e) { 
-        console.log(e.message)
-        alert(e.message);
-      }
+    fetchDataUseAuth<formType>(searchRequestData,'api/playlist/add').then((response) => {
+    console.log(response.data);
+  }).catch((error) => {
+    console.error('エラー:', error);
+  });
+    
   }
   return (
     <>
