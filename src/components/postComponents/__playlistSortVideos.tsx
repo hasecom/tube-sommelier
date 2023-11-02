@@ -1,10 +1,9 @@
 import { videoType } from '@/components/postComponents/searchType'
 type Props = {
-  setSelectVideos: (video: videoType[]) => void,
   handleRegistPlayList: () => void,
   selectVideos: videoType[],
 };
-const PlayListSortVideos:React.FC<Props> =  ({selectVideos,setSelectVideos,handleRegistPlayList}) => {
+const PlayListSortVideos:React.FC<Props> =  ({selectVideos,handleRegistPlayList}) => {
   return (
     <>
       <div className="text-center w-full block py-10 px-5">

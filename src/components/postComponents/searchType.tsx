@@ -12,5 +12,13 @@ export type videoType =  {
 export type formType = {
   playlistTitle:string,
   categoryCode:string,
-  videos:videoType[]
+  videos:videoType[],
+  postTimestamp:number,
+  CODE:number,
+  MESSAGE:string
+}
+export type formResponseType = {
+  CODE:number,
+  RESULT:any,
+  MESSAGE:string | null
 }

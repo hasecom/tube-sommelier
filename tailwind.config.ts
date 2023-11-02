@@ -14,6 +14,8 @@ const config: Config = {
       animation: {
         "slide-in-bottom": "slide-in-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.25s  both",
         "slide-out-bottom": "slide-out-bottom 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530)   both",
+        "slide-in-top": "slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940)   both",//popup
+        "slide-out-top": "slide-out-top 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530)   both",//popup
         "slide-in-fwd-center": "slide-in-fwd-center 0.2s cubic-bezier(0.250, 0.460, 0.450, 0.940)   both",
         "slide-in-fwd-center-reverse": "slide-in-fwd-center 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940)   reverse both",
         "slide-in-left": "slide-in-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940)   both",//投稿入力画面
@@ -82,6 +84,26 @@ const config: Config = {
               opacity: "1"
           }
       },
+      "slide-in-top": {
+        "0%": {
+            transform: "translateY(-1000px)",
+            opacity: "0"
+        },
+        to: {
+            transform: "translateY(0)",
+            opacity: "1"
+        }
+      },
+      "slide-out-top": {
+        "0%": {
+            transform: "translateY(0)",
+            opacity: "1"
+        },
+        to: {
+            transform: "translateY(-1000px)",
+            opacity: "0"
+        }
+    },
         "fade-in": {
           "0%": {
             opacity: "0"
