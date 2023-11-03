@@ -1,40 +1,40 @@
 'use client';
-import { useParams,useRouter } from 'next/navigation';
+import { useEffect,useState } from 'react'
+import { useRouter } from 'next/navigation';
+import {userAuth} from '@/func/axios';
+import TabComponent from '@/components/userPageComponents/tabComponent'
+type responseType = {
+  CODE:number,
+  RESULT:any,
+  MESSAGE:string
+}
 const Mypage = () => {
   const router = useRouter();
-  async function postData() {
-    // let params = new URLSearchParams();
-    // params.append('uid',"a");
-    const jsonData = {
-      key1: 'value1',
-      key2: 'value2'
-    };
-    const response = await fetch(process.env.NEXT_PUBLIC_API_PATH + 'api/mypage', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body:JSON.stringify(jsonData)
-    });
-    if (response.ok) {
-      // 認証成功時の処理
-      const data = await response.json();
-      console.log(data.CODE)
-      if(data.CODE){
-
-      
-      }else{
-        router.push("/login",{ scroll: false });
+  const [available,setAvailable] = useState(false);
+  async function auth() { 
+  const response = await userAuth<responseType>('api/mypage');
+    try{
+      if(response && response.data){ 
+        const responseData = response.data;
+        if(responseData['CODE'] && responseData['CODE'] == 1){
+          setAvailable(true)
+          return;
+        }
       }
-    } else {
-      router.push("/login",{ scroll: false });
+      throw new Error();
+    }catch(e){
+      router.push("/single/login-failed",{ scroll: false });
     }
 }
-postData();
+useEffect(() => {
+  auth();
+}, []);
+
   return (
-    <div>
-マイペー
+    <div className="relative">
+      {available && (
+      <TabComponent />
+      )}
     </div>
   )
 }

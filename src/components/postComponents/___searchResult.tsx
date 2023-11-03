@@ -43,12 +43,9 @@ const SearchResult: React.FC<Props> = ({ searchResult, selectVideos, setSelectVi
     // 現在の要素の高さを取得
     const containerHeight = container.offsetHeight;
     if (parentScrollTop > containerHeight * 0.6) {//60%
-      console.log(containerHeight)
-      console.log(stateScroll)
       if(stateScroll === containerHeight) return;
       setStateScroll(containerHeight);
       if(50 < searchResult.length) return;//searchResultの最大保持数
-      console.log("aaa")
        handleReSearch();
     }
   };

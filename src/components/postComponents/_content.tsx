@@ -4,7 +4,7 @@ import PlayListAddBasicInfo from "./__playlistAddBasicInfo";
 import PlayListAddLink from './__playlistAddLink';
 import PlayListSortVideos from './__playlistSortVideos';
 import { videoType, formType } from '@/components/postComponents/searchType'
-import fetchDataUseAuth from '@/func/axios';
+import {fetchDataUseAuth} from '@/func/axios';
 type Props = {
   showPostView: boolean,
   timestamp:number
