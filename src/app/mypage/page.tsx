@@ -1,8 +1,12 @@
 'use client';
+
 import { useEffect,useState } from 'react'
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'; 
+
 import {userAuth} from '@/func/axios';
 import TabComponent from '@/components/userPageComponents/tabComponent'
+import { TabData } from '@/components/userPageComponents/userPageType';
+import {Post,Favorite} from '@/components/userPageComponents/userTabs';
 type responseType = {
   CODE:number,
   RESULT:any,
@@ -11,9 +15,19 @@ type responseType = {
 const Mypage = () => {
   const router = useRouter();
   const [available,setAvailable] = useState(false);
+  const tabsData: TabData[] = [
+    {
+      name: 'ポスト',
+      content: <Post />,
+    },
+    {
+      name: 'お気に入り',
+      content:<Favorite />,
+    },
+  ];
   async function auth() { 
-  const response = await userAuth<responseType>('api/mypage');
     try{
+      const response = await userAuth<responseType>('api/mypage');
       if(response && response.data){ 
         const responseData = response.data;
         if(responseData['CODE'] && responseData['CODE'] == 1){
@@ -33,7 +47,7 @@ useEffect(() => {
   return (
     <div className="relative">
       {available && (
-      <TabComponent />
+      <TabComponent tabsData={tabsData} />
       )}
     </div>
   )

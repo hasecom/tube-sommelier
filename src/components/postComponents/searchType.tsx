@@ -14,8 +14,6 @@ export type formType = {
   categoryCode:string,
   videos:videoType[],
   postTimestamp:number,
-  CODE:number,
-  MESSAGE:string
 }
 export type formResponseType = {
   CODE:number,

@@ -3,6 +3,8 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import metaConst from '@/assets/constants/metaConst';
 import HeaderComponent from '@/components/headerComponent';
+import { Providers } from "@/assets/chakra/providers";
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,8 +21,10 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={`bg-gray-100 min-h-screen ${inter.className}`}>
+      <Providers>
         <HeaderComponent {...metaConst} />
-        {children}
+          {children}
+      </Providers>
       </body>
     </html>
   )

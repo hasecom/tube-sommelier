@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 
 
 
-export async function fetchDataUseAuth<T>(data:T,path:string):Promise<AxiosResponse<T>> {
+export async function fetchDataUseAuth<T>(data:T,path:string):Promise<AxiosResponse> {
   try {
     const axiosInstance = axios.create({
       withCredentials: true,
@@ -18,7 +18,7 @@ export async function fetchDataUseAuth<T>(data:T,path:string):Promise<AxiosRespo
   }
 }
 
-export async function userAuth<T>(path:string):Promise<AxiosResponse<T>> {
+export async function userAuth<T>(path:string):Promise<AxiosResponse> {
   try {
     const axiosInstance = axios.create({
       withCredentials: true,
