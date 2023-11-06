@@ -1,14 +1,15 @@
-import { useRef, useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { Card, Center, CardHeader, CardBody, CardFooter, Flex, Avatar, Box, IconButton, Text, Image, Heading, Button } from '@chakra-ui/react'
 import { fetchDataUseAuth } from '@/func/axios'
 import { playlistData } from './userPageType'
+import { ScrollYContext } from '@/providers/appProvider';
 type playlist = {
   page: number
 }
 export const Post: React.FC = () => {
-  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const scrollY = useContext(ScrollYContext);
   const [page, setPage] = useState(0);
-  const [stateScroll,setStateScroll] = useState(0);
+  const [godBodyHeight,setGodBodyHeight] = useState(0);
   const [playlists, setPlaylists] = useState<playlistData[]>([]);
   const postedPlaylist = async () => {
     try {
@@ -16,51 +17,38 @@ export const Post: React.FC = () => {
       if (response && response.data) {
         const responseData = response.data;
         if (responseData['CODE'] && responseData['CODE'] == 1 ) {
-          setPlaylists(responseData['RESULT']['PLAYLISTS']);
+          if(page !== 0){//0(初回ロード以外)
+            setPlaylists([...playlists, ...responseData['RESULT']['PLAYLISTS']]);
+          }else{
+            setPlaylists(responseData['RESULT']['PLAYLISTS']);
+          }
           return;
         }
       }
+      const bodyHeight = document.body.offsetHeight;
+      setGodBodyHeight(bodyHeight);
       throw new Error();
     } catch (e) {
       console.log(e.message)
     }
   }
-  //スクロール
-  const handleScroll = () => {
-    if (!scrollContainerRef.current) return;
-    const container = scrollContainerRef.current;
-    const parentElement = container.parentElement;
-    if (!parentElement) return;
-    const parentScrollTop = parentElement.scrollTop; // 親要素のscrollTopを取得
-    console.log("ii")
-    // 現在の要素の高さを取得
-    const containerHeight = container.offsetHeight;
-    if (parentScrollTop > containerHeight * 0.6) {//60%
-      if(stateScroll === containerHeight) return;
-      setStateScroll(containerHeight);
-       //handleReSearch();
-       console.log("aa")
+  useEffect(() => {
+    const bodyHeight = document.body.offsetHeight;
+   if (scrollY > (godBodyHeight*0.6) && bodyHeight !== godBodyHeight) { //ボディ全体の60%を超えたら
+    setPage(page+1);
     }
-  };
+  },[scrollY]);
+  useEffect(() => {
+    if(page === 0) return;
+    postedPlaylist();
+  }, [page]);
+
   useEffect(() => {
     postedPlaylist();
-    // スクロールイベントを監視
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      container.addEventListener('scroll', handleScroll);
-    }
-    // コンポーネントがアンマウントされたときにイベントリスナーをクリーンアップ
-    return () => {
-      if (scrollContainerRef.current) {
-        const container = scrollContainerRef.current;
-        container.removeEventListener('scroll', handleScroll);
-      }
-    };
   }, []);
 
   return (
-    <div className="overflow-y-scroll" onScroll={handleScroll}>
-      <div className="container" ref={scrollContainerRef}>
+    <div>
     {playlists.map((playlist) => (
       <Center className="my-3" key={playlist.ID} >
         <Card maxW='md' >
@@ -69,8 +57,8 @@ export const Post: React.FC = () => {
               <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
                 <Avatar name='Segun Adebayo' src='https://bit.ly/sage-adebayo' />
                 <Box>
-                  <Heading size='sm'>Segun Adebayo</Heading>
-                  <Text>Creator, Chakra UI</Text>
+                  <Heading size='sm'>{playlist.USER_NAME}</Heading>
+                  <Text>@{playlist.USER_ID}</Text>
                 </Box>
               </Flex>
               <IconButton variant='ghost' colorScheme='gray' aria-label='See menu' />
@@ -93,14 +81,13 @@ export const Post: React.FC = () => {
               },
             }}
           >
-            <Button flex='1' variant='ghost' >Like</Button>
-            <Button flex='1' variant='ghost' >Comment</Button>
-            <Button flex='1' variant='ghost'>Share</Button>
+            <Button flex='1' variant='ghost' >いいね  {playlist.LIKE_COUNT}件</Button>
+            <Button flex='1' variant='ghost' >コメント   {playlist.COMMENT_COUNT}件</Button>
+            <Button flex='1' variant='ghost'>Share {playlist.VIDEO_COUNT} </Button>
           </CardFooter>
         </Card>
       </Center>
       ))}
-      </div>
     </div>
   );
 }

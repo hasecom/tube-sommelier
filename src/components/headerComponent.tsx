@@ -1,30 +1,23 @@
 'use client';
 import Link from 'next/link'
-import { useState, useEffect } from 'react';
+import {useContext, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ScrollYContext } from '@/providers/appProvider';
 
 import { metaConstType } from '@/assets/constants/metaConst';
 import { uacStatus } from '@/func/cookie';
 const HeaderComponent = ({ title, description }: metaConstType) => {
+  const scrollY = useContext(ScrollYContext);
+  useEffect(()=>{
+    if (scrollY > 50) {
+      setScrolling(true);
+    } else {
+      setScrolling(false);
+    }
+  },[scrollY])
   const [uacStatusFlag, setUacStatusFlag] = useState(0);
   const [scrolling, setScrolling] = useState(false);
 
-  useEffect(() => {
-    setUacStatusFlag(uacStatus());
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolling(true);
-      } else {
-        setScrolling(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
   return (
     <>
     <AnimatePresence initial={false}>
@@ -38,7 +31,7 @@ const HeaderComponent = ({ title, description }: metaConstType) => {
         className="text-gray-600 body-font bg-white fixed top-0 left-0 right-0 z-10"
       >
     <header className="text-gray-600 body-font fixed top-0 left-0 right-0 z-10" style={{ background: 'rgba(255, 255, 255, 0.9)' }}>
-      <div className="container mx-auto flex flex-wrap px-5 py-1 flex-col md:flex-row items-center">
+      <div className="container mx-auto flex flex-wrap px-5 pt-2 pb-1 flex-col md:flex-row items-center">
         <a href="/" className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-10 h-10 text-white p-2 bg-red-500 rounded-full" viewBox="0 0 24 24">
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
