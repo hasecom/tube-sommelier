@@ -7,16 +7,17 @@ import { ScrollYContext } from '@/providers/appProvider';
 import { metaConstType } from '@/assets/constants/metaConst';
 import { uacStatus } from '@/func/cookie';
 const HeaderComponent = ({ title, description }: metaConstType) => {
+  const [uacStatusFlag, setUacStatusFlag] = useState(0);
+  const [scrolling, setScrolling] = useState(false);
   const scrollY = useContext(ScrollYContext);
   useEffect(()=>{
+    setUacStatusFlag(uacStatus());
     if (scrollY > 50) {
       setScrolling(true);
     } else {
       setScrolling(false);
     }
   },[scrollY])
-  const [uacStatusFlag, setUacStatusFlag] = useState(0);
-  const [scrolling, setScrolling] = useState(false);
 
   return (
     <>

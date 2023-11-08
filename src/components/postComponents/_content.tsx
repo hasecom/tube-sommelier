@@ -4,7 +4,7 @@ import PlayListAddBasicInfo from "./__playlistAddBasicInfo";
 import PlayListAddLink from './__playlistAddLink';
 import PlayListSortVideos from './__playlistSortVideos';
 import { videoType, formType } from '@/components/postComponents/searchType'
-import {fetchDataUseAuth} from '@/func/axios';
+import {axiosFormDataUseAuth} from '@/func/axios';
 type Props = {
   showPostView: boolean,
   timestamp:number
@@ -22,7 +22,13 @@ const Content: React.FC<Props> = ({ showPostView,timestamp,closeViews,onOpenModa
     setIsNextBtnClickable(isAvailableBool);
   };
   const [selectVideos, setSelectVideos] = useState<videoType[]>([]);//選択したvideo
-  const [searchRequestData, setSearchRequestData] = useState<formType>({ playlistTitle: '', categoryCode: '', videos: [] ,CODE:0,MESSAGE:'',postTimestamp:0});
+  const [searchRequestData, setSearchRequestData] = useState<formType>({
+    playlistThumbnails:null,
+    playlistTitle: '',
+    categoryCode: '',
+    videos: [],
+    postTimestamp:0,
+  });
   const handlePlaylistTitleChange = (newTitle: string) => {
     setSearchRequestData((prevData) => ({ ...prevData, playlistTitle: newTitle, }));
   };
@@ -31,6 +37,9 @@ const Content: React.FC<Props> = ({ showPostView,timestamp,closeViews,onOpenModa
   };
   const handlePlaylistVideoChange = (newVideos: videoType[]) => {
     setSearchRequestData((prevData) => ({ ...prevData, videos: newVideos, }));
+  };
+  const handleImageFileChange = (newImageFile: File | null) => {
+    setSearchRequestData((prevData) => ({ ...prevData, playlistThumbnails: newImageFile }));
   };
   useEffect(() => {
     setSearchRequestData((prevData) => ({ ...prevData,postTimestamp: timestamp, }));
@@ -42,7 +51,7 @@ const Content: React.FC<Props> = ({ showPostView,timestamp,closeViews,onOpenModa
 
   const handleRegistPlayList = async() => {
     try {
-      const response = await fetchDataUseAuth<formType>(searchRequestData, 'api/playlist/add');
+      const response = await axiosFormDataUseAuth<formType>(searchRequestData,'api/playlist/add' );
       const resData = response.data;
       if (resData['CODE'] === 1) {
         closeViews();
@@ -64,6 +73,7 @@ const Content: React.FC<Props> = ({ showPostView,timestamp,closeViews,onOpenModa
           nextPage={nextPage}
           handlePlaylistTitleChange={handlePlaylistTitleChange}
           handlePlaylistCategoryChange={handlePlaylistCategoryChange}
+          handleImageFileChange={handleImageFileChange}
           searchRequestData={searchRequestData} />}
         {pageNumber === 2 && <PlayListAddLink
           selectVideos={selectVideos}

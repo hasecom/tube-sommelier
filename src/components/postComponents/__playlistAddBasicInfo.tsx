@@ -1,19 +1,31 @@
-import React, { ReactNode, useState, useEffect } from 'react'
-import { videoType,formType } from '@/components/postComponents/searchType'
+import React, { useState, useEffect } from 'react'
+import { formType } from '@/components/postComponents/searchType'
+import { heightInherit } from '@/assets/styleComponents/style'
+import { ImageUploadForm } from '../form/imageUpload';
+
 type Props = {
   handleNextBtnClick: (isAvailableBool: boolean) => void,
-  handlePlaylistTitleChange:(playlistTitle:string)=>void,
-  handlePlaylistCategoryChange:(playlistCategory:string)=>void,
-  searchRequestData:formType,
+  handlePlaylistTitleChange: (playlistTitle: string) => void,
+  handlePlaylistCategoryChange: (playlistCategory: string) => void,
+  handleImageFileChange:(file:File | null) => void,
+  searchRequestData: formType,
   isNextBtnClickable: boolean,
   nextPage: () => void
 };
-const PlayListAddBasicInfo: React.FC<Props> = ({ handleNextBtnClick, isNextBtnClickable, nextPage, handlePlaylistTitleChange,handlePlaylistCategoryChange,searchRequestData}) => {
+const PlayListAddBasicInfo: React.FC<Props> = ({ 
+  handleNextBtnClick, 
+  isNextBtnClickable, 
+  nextPage,
+  handlePlaylistTitleChange, 
+  handlePlaylistCategoryChange, 
+  searchRequestData,
+  handleImageFileChange
+}) => {
   const [selectedOption, setSelectedOption] = useState('');
   const [inputValue, setInputValue] = useState<string>('');
-  const [isChecked, setIsChecked] = useState(false);//有料販売
+  const [file, setFile] = useState(null);
   const [categories, setCategories] = useState([]);
-  
+
   useEffect(() => {
     async function getCategory() {
       const response = await fetch(process.env.NEXT_PUBLIC_API_PATH + 'api/playlist/get/category', {
@@ -27,14 +39,14 @@ const PlayListAddBasicInfo: React.FC<Props> = ({ handleNextBtnClick, isNextBtnCl
       } catch (e) { alert(e.message); }
     }
     getCategory();
-    if(searchRequestData.categoryCode != ""){
+    if (searchRequestData.categoryCode != "") {
       setSelectedOption(searchRequestData.categoryCode);
     }
-    if(searchRequestData.playlistTitle != ""){
+    if (searchRequestData.playlistTitle != "") {
       setInputValue(searchRequestData.playlistTitle);
     }
   }, []);
-  
+
   const handleSelectChange = (e) => {
     setSelectedOption(e.target.value);
     handlePlaylistCategoryChange(e.target.value);
@@ -53,7 +65,7 @@ const PlayListAddBasicInfo: React.FC<Props> = ({ handleNextBtnClick, isNextBtnCl
   });
   return (
     <>
-      <div className={`animate-slide-in-left  w-full h-full bg-white pt-3 px-3 flex flex-col `}>
+      <div className={`animate-slide-in-left  w-full  bg-white pt-3 px-3 flex flex-col overflow-y-scroll absolute  bottom-0`} style={heightInherit}>
         <div className="text-center w-full block">
           <button
             className={`${isNextBtnClickable ? 'bg-primary' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} text-white p-2 max-md:w-full max-2xl:w-[60%]  rounded-lg text-xl`}
@@ -61,40 +73,44 @@ const PlayListAddBasicInfo: React.FC<Props> = ({ handleNextBtnClick, isNextBtnCl
             onClick={nextPage} >次へ
           </button>
         </div>
-        <div className="text-center w-full block pt-10">
-          <label className="max-md:w-full max-2xl:w-[60%]  text-left mx-auto block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
-            プレイリスト名
-          </label>
-          <input
-            type="text"
-            placeholder="プレイリスト名"
-            className="border border-gray-300 p-2 rounded max-md:w-full max-2xl:w-[60%] focus:outline-none focus:ring focus:border-primary"
-            value={inputValue}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="text-center w-full block pt-10">
-          <label className=" max-md:w-full max-2xl:w-[60%] text-left mx-auto block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
-            カテゴリー
-          </label>
-          <select
-            id="selectMenu"
-            name="selectMenu"
-            value={selectedOption}
-            onChange={handleSelectChange}
-            className="border border-gray-300 p-2 rounded  max-md:w-full max-2xl:w-[60%]  focus:outline-none focus:ring focus:border-primary appearance-none rounded  bg-transparent "
-          >
-            <option value="" disabled>
-              選択してください
-            </option>
-            {categories.map((category) => (
-              <option key={category?.CATEGORY_CODE} value={category?.CATEGORY_CODE}>
-                {category?.CATEGORY_NAME}
+        <div className="overflow-y-scroll">
+          <div className="text-center w-full block pt-10">
+            <label className="max-md:w-full max-2xl:w-[60%]  text-left mx-auto block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
+              プレイリスト名
+            </label>
+            <input
+              type="text"
+              placeholder="プレイリスト名"
+              className="border border-gray-300 p-2 rounded max-md:w-full max-2xl:w-[60%] focus:outline-none focus:ring focus:border-primary"
+              value={inputValue}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="text-center w-full block pt-10">
+            <label className=" max-md:w-full max-2xl:w-[60%] text-left mx-auto block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
+              カテゴリー
+            </label>
+            <select
+              id="selectMenu"
+              name="selectMenu"
+              value={selectedOption}
+              onChange={handleSelectChange}
+              className="border border-gray-300 p-2 rounded  max-md:w-full max-2xl:w-[60%]  focus:outline-none focus:ring focus:border-primary appearance-none rounded  bg-transparent "
+            >
+              <option value="" disabled>
+                選択してください
               </option>
-            ))}
-          </select>
+              {categories.map((category) => (
+                <option key={category?.CATEGORY_CODE} value={category?.CATEGORY_CODE}>
+                  {category?.CATEGORY_NAME}
+                </option>
+              ))}
+            </select>
+            <div className="text-center w-full block pt-10">
+              <ImageUploadForm file={file} setFile={setFile} handleImageFileChange={handleImageFileChange} />
+            </div>
 
-          {/* <div className="flex items-center justify-center  w-full block pt-10">
+            {/* <div className="flex items-center justify-center  w-full block pt-10">
             <label className="relative inline-flex items-center cursor-pointer ">
               <input type="checkbox" value="" className="sr-only peer"
                 onChange={(e) => setIsChecked(e.target.checked)}
@@ -112,8 +128,10 @@ const PlayListAddBasicInfo: React.FC<Props> = ({ handleNextBtnClick, isNextBtnCl
             />
             <span className="text-sm ml-1">円</span>
           </div> */}
+          </div>
         </div>
       </div>
+
     </>
   )
 }

@@ -10,10 +10,11 @@ export type videoType =  {
 }
 
 export type formType = {
+  playlistThumbnails:File | null,
   playlistTitle:string,
   categoryCode:string,
   videos:videoType[],
-  postTimestamp:number,
+  postTimestamp:number
 }
 export type formResponseType = {
   CODE:number,

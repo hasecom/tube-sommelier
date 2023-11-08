@@ -10,6 +10,7 @@ export const Post: React.FC = () => {
   const scrollY = useContext(ScrollYContext);
   const [page, setPage] = useState(0);
   const [godBodyHeight,setGodBodyHeight] = useState(0);
+  const [oldGodBodyHeight,setOldGodBodyHeight] = useState(0);
   const [playlists, setPlaylists] = useState<playlistData[]>([]);
   const postedPlaylist = async () => {
     try {
@@ -26,6 +27,7 @@ export const Post: React.FC = () => {
         }
       }
       const bodyHeight = document.body.offsetHeight;
+      setOldGodBodyHeight(godBodyHeight);
       setGodBodyHeight(bodyHeight);
       throw new Error();
     } catch (e) {
@@ -34,8 +36,14 @@ export const Post: React.FC = () => {
   }
   useEffect(() => {
     const bodyHeight = document.body.offsetHeight;
-   if (scrollY > (godBodyHeight*0.6) && bodyHeight !== godBodyHeight) { //ボディ全体の60%を超えたら
-    setPage(page+1);
+   if (scrollY > (bodyHeight*0.6) && bodyHeight !== godBodyHeight ) { //ボディ全体の60%を超えたら
+    if(godBodyHeight  !== 0 ){
+      if(oldGodBodyHeight == godBodyHeight){
+        setPage(page+1);
+      }
+    }else{
+      setPage(page+1);
+    }
     }
   },[scrollY]);
   useEffect(() => {
