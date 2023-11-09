@@ -1,8 +1,9 @@
 import { useEffect, useState, useContext } from 'react'
 import { Card, Center, CardHeader, CardBody, CardFooter, Flex, Avatar, Box, IconButton, Text, Image, Heading, Button } from '@chakra-ui/react'
-import { fetchDataUseAuth } from '@/func/axios'
+import { axiosFormDataUseAuth } from '@/func/axios'
 import { playlistData } from './userPageType'
 import { ScrollYContext } from '@/providers/appProvider';
+import { LikeCardComponent } from '../userActionComponents/likeCardComponent';
 type playlist = {
   page: number
 }
@@ -14,7 +15,7 @@ export const Post: React.FC = () => {
   const [playlists, setPlaylists] = useState<playlistData[]>([]);
   const postedPlaylist = async () => {
     try {
-      const response = await fetchDataUseAuth<playlist>({ 'page': page }, 'api/playlist/getPosted');
+      const response = await axiosFormDataUseAuth<playlist>({ 'page': page }, 'api/playlist/getPosted');
       if (response && response.data) {
         const responseData = response.data;
         if (responseData['CODE'] && responseData['CODE'] == 1 ) {
@@ -76,9 +77,9 @@ export const Post: React.FC = () => {
             <Text>{playlist.PLAYLIST_NAME}</Text>
           </CardBody>
           <Image
-            objectFit='cover'
-            src='https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
-            alt='Chakra UI'
+          objectFit='cover'
+          src={(playlist.PLAYLIST_THUMBNAIL && (playlist.PLAYLIST_THUMBNAIL.startsWith('http://') || playlist.PLAYLIST_THUMBNAIL.startsWith('https://'))) ? playlist.PLAYLIST_THUMBNAIL : process.env.NEXT_PUBLIC_ASSETS_PATH + "Image/playlistThumbnails/" + (playlist.PLAYLIST_THUMBNAIL || 'default.jpg')}
+          alt={playlist.PLAYLIST_THUMBNAIL || 'default.jpg'}
           />
           <CardFooter
             justify='space-between'
@@ -89,7 +90,7 @@ export const Post: React.FC = () => {
               },
             }}
           >
-            <Button flex='1' variant='ghost' >いいね  {playlist.LIKE_COUNT}件</Button>
+            <LikeCardComponent likeCount={playlist.LIKE_COUNT} />
             <Button flex='1' variant='ghost' >コメント   {playlist.COMMENT_COUNT}件</Button>
             <Button flex='1' variant='ghost'>Share {playlist.VIDEO_COUNT} </Button>
           </CardFooter>

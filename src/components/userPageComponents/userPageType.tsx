@@ -10,10 +10,11 @@ export type playlistData = {
   USER_NAME:string,
   PLAYLIST_UID:string,
   PLAYLIST_NAME:string,
+  PLAYLIST_THUMBNAIL:string,
   PLAYLIST_UPDATED_AT:string,
   PLAYLIST_CREATED_AT:string,
   VIDEO_COUNT:number,
   CATEGORY_NAME:number,
   COMMENT_COUNT:number,
-  LIKE_COUNT:string
+  LIKE_COUNT:number
 }
