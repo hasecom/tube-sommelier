@@ -16,5 +16,6 @@ export type playlistData = {
   VIDEO_COUNT:number,
   CATEGORY_NAME:number,
   COMMENT_COUNT:number,
-  LIKE_COUNT:number
+  LIKE_COUNT:number,
+  IS_LIKED:string,
 }

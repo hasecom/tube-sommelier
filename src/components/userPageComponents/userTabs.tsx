@@ -1,13 +1,38 @@
 import { useEffect, useState, useContext } from 'react'
-import { Card, Center, CardHeader, CardBody, CardFooter, Flex, Avatar, Box, IconButton, Text, Image, Heading, Button } from '@chakra-ui/react'
 import { axiosFormDataUseAuth } from '@/func/axios'
 import { playlistData } from './userPageType'
 import { ScrollYContext } from '@/providers/appProvider';
-import { LikeCardComponent } from '../userActionComponents/likeCardComponent';
+import  PostCardComponent  from '@/components/cardComponents/postCardComponent';
 type playlist = {
   page: number
 }
+//お気に入り
+export const Favorite: React.FC = () => {
+  const { playlists } = useUserTabsData('api/playlist/getLiked');
+  return (
+    <div>
+    {playlists.map((playlist:playlistData) => (
+      <PostCardComponent playlist={playlist} key={playlist.ID} />
+      ))}
+    </div>
+  );
+}
+
+//自分の投稿
 export const Post: React.FC = () => {
+  const { playlists } = useUserTabsData('api/playlist/getPosted');
+  return (
+    <div>
+    {playlists.map((playlist:playlistData) => (
+      <PostCardComponent playlist={playlist} key={playlist.ID} />
+      ))}
+    </div>
+  );
+}
+type userTabsDataProps = {
+  playlists:playlistData[]
+}
+const useUserTabsData =  (apiEndpoint:string):userTabsDataProps =>  {
   const scrollY = useContext(ScrollYContext);
   const [page, setPage] = useState(0);
   const [godBodyHeight,setGodBodyHeight] = useState(0);
@@ -15,14 +40,15 @@ export const Post: React.FC = () => {
   const [playlists, setPlaylists] = useState<playlistData[]>([]);
   const postedPlaylist = async () => {
     try {
-      const response = await axiosFormDataUseAuth<playlist>({ 'page': page }, 'api/playlist/getPosted');
+      const response = await axiosFormDataUseAuth<playlist>({ 'page': page }, apiEndpoint);
       if (response && response.data) {
         const responseData = response.data;
         if (responseData['CODE'] && responseData['CODE'] == 1 ) {
           if(page !== 0){//0(初回ロード以外)
-            setPlaylists([...playlists, ...responseData['RESULT']['PLAYLISTS']]);
+            const additionPlaylists = responseData['RESULT']['PLAYLISTS'] as playlistData[];
+            setPlaylists([...playlists, ...additionPlaylists]);
           }else{
-            setPlaylists(responseData['RESULT']['PLAYLISTS']);
+            setPlaylists(responseData['RESULT']['PLAYLISTS'] as playlistData[]);
           }
           return;
         }
@@ -55,57 +81,5 @@ export const Post: React.FC = () => {
   useEffect(() => {
     postedPlaylist();
   }, []);
-
-  return (
-    <div>
-    {playlists.map((playlist) => (
-      <Center className="my-3" key={playlist.ID} >
-        <Card maxW='md' >
-          <CardHeader>
-            <Flex>
-              <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
-                <Avatar name='Segun Adebayo' src='https://bit.ly/sage-adebayo' />
-                <Box>
-                  <Heading size='sm'>{playlist.USER_NAME}</Heading>
-                  <Text>@{playlist.USER_ID}</Text>
-                </Box>
-              </Flex>
-              <IconButton variant='ghost' colorScheme='gray' aria-label='See menu' />
-            </Flex>
-          </CardHeader>
-          <CardBody>
-            <Text>{playlist.PLAYLIST_NAME}</Text>
-          </CardBody>
-          <Image
-          objectFit='cover'
-          src={(playlist.PLAYLIST_THUMBNAIL && (playlist.PLAYLIST_THUMBNAIL.startsWith('http://') || playlist.PLAYLIST_THUMBNAIL.startsWith('https://'))) ? playlist.PLAYLIST_THUMBNAIL : process.env.NEXT_PUBLIC_ASSETS_PATH + "Image/playlistThumbnails/" + (playlist.PLAYLIST_THUMBNAIL || 'default.jpg')}
-          alt={playlist.PLAYLIST_THUMBNAIL || 'default.jpg'}
-          />
-          <CardFooter
-            justify='space-between'
-            flexWrap='wrap'
-            sx={{
-              '& > button': {
-                minW: '136px',
-              },
-            }}
-          >
-            <LikeCardComponent likeCount={playlist.LIKE_COUNT} />
-            <Button flex='1' variant='ghost' >コメント   {playlist.COMMENT_COUNT}件</Button>
-            <Button flex='1' variant='ghost'>Share {playlist.VIDEO_COUNT} </Button>
-          </CardFooter>
-        </Card>
-      </Center>
-      ))}
-    </div>
-  );
-}
-
-
-export const Favorite: React.FC = () => {
-  return (
-    <>
-      <div>いいね</div>
-    </>
-  );
+  return {playlists};
 }
