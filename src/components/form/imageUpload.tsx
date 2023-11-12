@@ -25,7 +25,6 @@ export const ImageUploadForm: React.FC<Props> = ({ file, setFile,handleImageFile
       
       // バリデーションが成功したらファイルをセット
       setFile(selectedFile);
-      console.log(selectedFile)
       handleImageFileChange(selectedFile);
     }
   }

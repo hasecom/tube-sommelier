@@ -6,9 +6,14 @@ import  PostCardComponent  from '@/components/cardComponents/postCardComponent';
 type playlist = {
   page: number
 }
-//お気に入り
-export const Favorite: React.FC = () => {
-  const { playlists } = useUserTabsData('api/playlist/getLiked');
+type Props =  {
+  apiEndPoint:string
+}
+
+
+//自分の投稿
+export const Post: React.FC<Props> = ({apiEndPoint}) => {
+  const { playlists } = useUserTabsData(apiEndPoint);
   return (
     <div>
     {playlists.map((playlist:playlistData) => (
@@ -17,10 +22,9 @@ export const Favorite: React.FC = () => {
     </div>
   );
 }
-
-//自分の投稿
-export const Post: React.FC = () => {
-  const { playlists } = useUserTabsData('api/playlist/getPosted');
+//お気に入り
+export const Favorite: React.FC<Props> = ({apiEndPoint}) => {
+  const { playlists } = useUserTabsData(apiEndPoint);
   return (
     <div>
     {playlists.map((playlist:playlistData) => (

@@ -1,14 +1,20 @@
+import { useRouter } from 'next/navigation';
 import { Card, Center, CardHeader, CardBody, CardFooter, Flex, Avatar, Box, IconButton, Text, Image, Heading, Button } from '@chakra-ui/react'
 import { playlistData } from '@/components/userPageComponents/userPageType';
 import { LikeCardComponent } from '../userActionComponents/likeCardComponent';
+
 type Props = {
   'playlist': playlistData
 }
 const PostCardComponent: React.FC<Props> = ({ playlist }) => {
+  const router = useRouter();
+  const profileClickHandle = () => {
+    router.push("/profile/"+playlist.USER_ID,{ scroll: false });
+  }
   return (
     <Center className="my-3" key={playlist.ID} >
       <Card maxW='md' >
-        <CardHeader>
+        <CardHeader onClick={profileClickHandle}>
           <Flex>
             <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
               <Avatar name='Segun Adebayo' src='https://bit.ly/sage-adebayo' />

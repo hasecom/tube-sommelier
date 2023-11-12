@@ -1,55 +1,53 @@
 'use client';
 
 import { useEffect,useState } from 'react'
-import { useRouter } from 'next/navigation'; 
+import { useParams,useRouter } from 'next/navigation';
 
-import {userAuth} from '@/func/axios';
+import { requestDataWithUserAuth } from '@/func/axios';
 import TabComponent from '@/components/userPageComponents/tabComponent'
 import { TabData } from '@/components/userPageComponents/userPageType';
 import {Post,Favorite} from '@/components/userPageComponents/userTabs';
-type responseType = {
-  CODE:number,
-  RESULT:any,
-  MESSAGE:string
+type requestDataProps = {
+  userId:string,
 }
-const Mypage = () => {
+const ProfilePage = () => {
   const router = useRouter();
-  const [available,setAvailable] = useState(false);
+  const useparams = useParams()
+  const userid = typeof useparams.userId === 'string' ? useparams.userId : "";
+
   const tabsData: TabData[] = [
     {
       name: 'ポスト',
-      content: <Post apiEndPoint={"api/playlist/getPosted"} />,
+      content: <Post apiEndPoint={"api/playlist/getOtherUserPosted"} />,
     },
     {
       name: 'お気に入り',
-      content:<Favorite apiEndPoint={"api/playlist/getLiked"} />,
+      content:<Favorite apiEndPoint={"api/playlist/getOtherUserLiked"} />,
     },
   ];
-  async function auth() { 
+  async function getUserProfile() { 
     try{
-      const response = await userAuth<responseType>('api/mypage');
+      const response = await requestDataWithUserAuth<requestDataProps>({'userId':userid},'api/user/profile');
       if(response && response.data){ 
         const responseData = response.data;
         if(responseData['CODE'] && responseData['CODE'] == 1){
-          setAvailable(true)
           return;
         }
+      }else{
+        throw new Error("エラーが発生しました。");
       }
-      throw new Error();
     }catch(e){
-      router.push("/single/login-failed",{ scroll: false });
+      alert(e.message);
     }
 }
 useEffect(() => {
-  auth();
-}, []);
+  getUserProfile();
+});
 
   return (
     <div className="relative">
-      {available && (
       <TabComponent tabsData={tabsData} />
-      )}
     </div>
   )
 }
-export default Mypage;
+export default ProfilePage;
