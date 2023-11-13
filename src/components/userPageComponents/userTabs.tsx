@@ -4,16 +4,18 @@ import { playlistData } from './userPageType'
 import { ScrollYContext } from '@/providers/appProvider';
 import  PostCardComponent  from '@/components/cardComponents/postCardComponent';
 type playlist = {
-  page: number
+  page: number,
+  userId:string
 }
 type Props =  {
-  apiEndPoint:string
+  apiEndPoint:string,
+  userId:string
 }
 
 
-//自分の投稿
-export const Post: React.FC<Props> = ({apiEndPoint}) => {
-  const { playlists } = useUserTabsData(apiEndPoint);
+//投稿
+export const Post: React.FC<Props> = ({apiEndPoint,userId}) => {
+  const { playlists } = useUserTabsData(apiEndPoint,userId);
   return (
     <div>
     {playlists.map((playlist:playlistData) => (
@@ -23,8 +25,8 @@ export const Post: React.FC<Props> = ({apiEndPoint}) => {
   );
 }
 //お気に入り
-export const Favorite: React.FC<Props> = ({apiEndPoint}) => {
-  const { playlists } = useUserTabsData(apiEndPoint);
+export const Favorite: React.FC<Props> = ({apiEndPoint,userId}) => {
+  const { playlists } = useUserTabsData(apiEndPoint,userId);
   return (
     <div>
     {playlists.map((playlist:playlistData) => (
@@ -36,7 +38,7 @@ export const Favorite: React.FC<Props> = ({apiEndPoint}) => {
 type userTabsDataProps = {
   playlists:playlistData[]
 }
-const useUserTabsData =  (apiEndpoint:string):userTabsDataProps =>  {
+const useUserTabsData =  (apiEndpoint:string,userId:string):userTabsDataProps =>  {
   const scrollY = useContext(ScrollYContext);
   const [page, setPage] = useState(0);
   const [godBodyHeight,setGodBodyHeight] = useState(0);
@@ -44,7 +46,7 @@ const useUserTabsData =  (apiEndpoint:string):userTabsDataProps =>  {
   const [playlists, setPlaylists] = useState<playlistData[]>([]);
   const postedPlaylist = async () => {
     try {
-      const response = await axiosFormDataUseAuth<playlist>({ 'page': page }, apiEndpoint);
+      const response = await axiosFormDataUseAuth<playlist>({ 'page': page,'userId':userId}, apiEndpoint);
       if (response && response.data) {
         const responseData = response.data;
         if (responseData['CODE'] && responseData['CODE'] == 1 ) {

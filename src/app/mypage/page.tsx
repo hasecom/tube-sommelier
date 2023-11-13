@@ -18,11 +18,11 @@ const Mypage = () => {
   const tabsData: TabData[] = [
     {
       name: 'ポスト',
-      content: <Post apiEndPoint={"api/playlist/getPosted"} />,
+      content: <Post apiEndPoint={"api/playlist/getPosted"}  userId="" />,
     },
     {
       name: 'お気に入り',
-      content:<Favorite apiEndPoint={"api/playlist/getLiked"} />,
+      content:<Favorite apiEndPoint={"api/playlist/getLiked"} userId="" />,
     },
   ];
   async function auth() { 

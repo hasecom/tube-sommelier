@@ -76,8 +76,8 @@ const PostCardComponent: React.FC<Props> = ({ playlist }) => {
           }}
         >
           <LikeCardComponent likeCount={playlist.LIKE_COUNT} playlistUid={playlist.PLAYLIST_UID} isLiked={playlist.IS_LIKED} />
-          <Button flex='1' variant='ghost' >コメント   {playlist.COMMENT_COUNT}件</Button>
-          <Button flex='1' variant='ghost'>Share {playlist.VIDEO_COUNT} </Button>
+          <Button flex='1' variant='ghost' >コメント  {playlist.COMMENT_COUNT}件</Button>
+          <Button flex='1' variant='ghost'>Share  </Button>
         </CardFooter>
       </Card>
     </Center>

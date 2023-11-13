@@ -18,11 +18,11 @@ const ProfilePage = () => {
   const tabsData: TabData[] = [
     {
       name: 'ポスト',
-      content: <Post apiEndPoint={"api/playlist/getOtherUserPosted"} />,
+      content: <Post apiEndPoint={"api/playlist/getOtherUserPosted"} userId={userid} />,
     },
     {
       name: 'お気に入り',
-      content:<Favorite apiEndPoint={"api/playlist/getOtherUserLiked"} />,
+      content:<Favorite apiEndPoint={"api/playlist/getOtherUserLiked"} userId={userid} />,
     },
   ];
   async function getUserProfile() { 
