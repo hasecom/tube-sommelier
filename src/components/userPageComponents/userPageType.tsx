@@ -5,7 +5,6 @@ export type TabData = {
 }
 export type playlistData = {
   ID:number,
-  USER_UID:string,
   USER_ID:string,
   USER_NAME:string,
   PLAYLIST_UID:string,
@@ -18,4 +17,6 @@ export type playlistData = {
   COMMENT_COUNT:number,
   LIKE_COUNT:number,
   IS_LIKED:string,
+  IS_FOLLOW:string,
+  IS_FOLLOWER:string
 }

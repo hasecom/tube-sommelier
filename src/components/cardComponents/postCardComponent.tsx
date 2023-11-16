@@ -2,7 +2,7 @@ import { useRouter } from 'next/navigation';
 import { Card, Center, CardHeader, CardBody, CardFooter, Flex, Avatar, Box, IconButton, Text, Image, Heading, Button } from '@chakra-ui/react'
 import { playlistData } from '@/components/userPageComponents/userPageType';
 import { LikeCardComponent } from '../userActionComponents/likeCardComponent';
-
+import { FollowCardComponent } from '../userActionComponents/followCardComponent';
 type Props = {
   'playlist': playlistData
 }
@@ -14,18 +14,18 @@ const PostCardComponent: React.FC<Props> = ({ playlist }) => {
   return (
     <Center className="my-3" key={playlist.ID} >
       <Card maxW='md' >
-        <CardHeader onClick={profileClickHandle}>
-          <Flex>
-            <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
-              <Avatar name='Segun Adebayo' src='https://bit.ly/sage-adebayo' />
-              <Box>
-                <Heading size='sm'>{playlist.USER_NAME}</Heading>
-                <Text>@{playlist.USER_ID}</Text>
-              </Box>
-            </Flex>
-            <IconButton variant='ghost' colorScheme='gray' aria-label='See menu' />
-          </Flex>
-        </CardHeader>
+      <CardHeader onClick={profileClickHandle}>
+      <Flex justifyContent='space-between'>
+        <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
+          <Avatar name='Segun Adebayo' src='https://bit.ly/sage-adebayo' />
+          <Box>
+            <Heading size='sm'>{playlist.USER_NAME}</Heading>
+            <Text>@{playlist.USER_ID}</Text>
+          </Box>
+        </Flex>
+        <FollowCardComponent isFollow={playlist.IS_FOLLOW} userId={playlist.USER_ID} />
+      </Flex>
+    </CardHeader>
         <CardBody>
           <Text>{playlist.PLAYLIST_NAME}</Text>
         </CardBody>
