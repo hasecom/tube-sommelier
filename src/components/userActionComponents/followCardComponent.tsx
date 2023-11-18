@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Button } from '@chakra-ui/react'
+import { Button,useDisclosure } from '@chakra-ui/react'
 import { requestDataWithUserAuth } from '@/func/axios'
+import ConsentModal from '@/components/consentModal'
 type Props = {
   isFollow: string,
   userId: string
@@ -10,7 +11,8 @@ type requestDataProps =  {
 }
 export const FollowCardComponent: React.FC<Props> = ({ isFollow, userId }) => {
   const [isFollowState, setIsFollowState] = useState(false);
-  const handleFollow = async() => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const doSomething = async() => {
     try{
       const response = await requestDataWithUserAuth<requestDataProps>({'userId':userId},'api/user/action/follow');
       if(response && response.data){ 
@@ -24,12 +26,21 @@ export const FollowCardComponent: React.FC<Props> = ({ isFollow, userId }) => {
     }catch(e){
       
     }
+    onClose();
+  }
+  const handleFollow = () => {
+    if(isFollowState){
+        onOpen();
+      }else{
+        doSomething();
+      }
   }
   useEffect(() => {
     setIsFollowState(isFollow == "1");
   }, [isFollow])
   return (
     <>
+      <ConsentModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} doSomething={doSomething} />
       {!isFollowState ? (
         <Button
           onClick={handleFollow}

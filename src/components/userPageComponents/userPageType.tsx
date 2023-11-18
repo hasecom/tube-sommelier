@@ -20,3 +20,12 @@ export type playlistData = {
   IS_FOLLOW:string,
   IS_FOLLOWER:string
 }
+export type UserData = {
+  USER_ID:string,
+  USER_NAME:string,
+  FOLLOWER_COUNT:string,
+  FOLLOWING_COUNT:string,
+  IS_FOLLOWING:string | null,
+  IS_FOLLOWED_BY:string | null,
+  IS_SELF:string | null
+}

@@ -2,7 +2,7 @@ import { useRouter } from 'next/navigation';
 import { Card, Center, CardHeader, CardBody, CardFooter, Flex, Avatar, Box, IconButton, Text, Image, Heading, Button } from '@chakra-ui/react'
 import { playlistData } from '@/components/userPageComponents/userPageType';
 import { LikeCardComponent } from '../userActionComponents/likeCardComponent';
-import { FollowCardComponent } from '../userActionComponents/followCardComponent';
+
 type Props = {
   'playlist': playlistData
 }
@@ -23,7 +23,6 @@ const PostCardComponent: React.FC<Props> = ({ playlist }) => {
             <Text>@{playlist.USER_ID}</Text>
           </Box>
         </Flex>
-        <FollowCardComponent isFollow={playlist.IS_FOLLOW} userId={playlist.USER_ID} />
       </Flex>
     </CardHeader>
         <CardBody>

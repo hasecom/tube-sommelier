@@ -5,15 +5,16 @@ import { useParams,useRouter } from 'next/navigation';
 
 import { requestDataWithUserAuth } from '@/func/axios';
 import TabComponent from '@/components/userPageComponents/tabComponent'
-import { TabData } from '@/components/userPageComponents/userPageType';
+import { TabData,UserData } from '@/components/userPageComponents/userPageType';
 import {Post,Favorite} from '@/components/userPageComponents/userTabs';
+import UserProfileComponent from '@/components/userPageComponents/userProfileComponent';
 type requestDataProps = {
   userId:string,
 }
 const ProfilePage = () => {
-  const router = useRouter();
-  const useparams = useParams()
+  const useparams = useParams();
   const userid = typeof useparams.userId === 'string' ? useparams.userId : "";
+  const  userData  = UseGetUserProfile(userid);
 
   const tabsData: TabData[] = [
     {
@@ -25,29 +26,38 @@ const ProfilePage = () => {
       content:<Favorite apiEndPoint={"api/playlist/getOtherUserLiked"} userId={userid} />,
     },
   ];
-  async function getUserProfile() { 
+ 
+  return (
+    <div className="relative">
+      <UserProfileComponent userData={userData} />
+      <TabComponent tabsData={tabsData} />
+    </div>
+  )
+}
+const UseGetUserProfile = (userid:string):UserData | null => {
+    const router = useRouter();
+    const [userData, setUserData] = useState<UserData | null>(null);
+      useEffect(()=>{
+      getUserProfile();
+    },[])
+    const getUserProfile = async () => {
     try{
       const response = await requestDataWithUserAuth<requestDataProps>({'userId':userid},'api/user/profile');
       if(response && response.data){ 
         const responseData = response.data;
         if(responseData['CODE'] && responseData['CODE'] == 1){
-          return;
+          setUserData(response.data['RESULT'] as UserData)
+        }else{
+          throw new Error("");
         }
       }else{
-        throw new Error("エラーが発生しました。");
+        throw new Error("");
       }
     }catch(e){
-      alert(e.message);
+      router.push("/single/user-does-not-exist",{ scroll: false });
+      setUserData(null)
     }
-}
-useEffect(() => {
-  getUserProfile();
-});
-
-  return (
-    <div className="relative">
-      <TabComponent tabsData={tabsData} />
-    </div>
-  )
+  }
+    return userData;
 }
 export default ProfilePage;

@@ -9,6 +9,7 @@ const componentMapping:{[key:string]:JSX.Element} = {
   "error": <MessageComponent  message="エラーが発生しました。" linkPath="/" isDisplayButton={true} buttonMessage="ホームに戻る" />,
   "404": <MessageComponent  message="このページは存在しません。" linkPath="/" isDisplayButton={true} buttonMessage="ホームに戻る" />,
   "login-failed": <MessageComponent  message={`ログイン期限が切れました。\n再ログインしてください。`} linkPath="/login" isDisplayButton={true} buttonMessage="ログイン" />,
+  "user-does-not-exist": <MessageComponent  message={`ユーザの取得に失敗したか、ユーザが存在しません。`} linkPath="/" isDisplayButton={true} buttonMessage="ホームに戻る" />,
 };
 const SinglePage = () =>  {
   const useparams = useParams();
