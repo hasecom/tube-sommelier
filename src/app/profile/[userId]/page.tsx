@@ -15,7 +15,6 @@ const ProfilePage = () => {
   const useparams = useParams();
   const userid = typeof useparams.userId === 'string' ? useparams.userId : "";
   const  userData  = UseGetUserProfile(userid);
-
   const tabsData: TabData[] = [
     {
       name: 'ポスト',

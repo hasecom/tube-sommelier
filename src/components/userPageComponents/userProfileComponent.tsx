@@ -1,10 +1,21 @@
+import { useState } from 'react';
 import { Avatar, Box, Button, Flex, Heading, Text, SkeletonCircle, SkeletonText} from '@chakra-ui/react';
 import { UserData } from './userPageType';
 import { FollowCardComponent } from '../userActionComponents/followCardComponent';
 type Props = {
-  userData:UserData | null
+  userData:UserData | null,
 }
 const UserProfileComponent:React.FC<Props> = ({userData}) => {
+  const [isFollowed, setFollowed] = useState(0);
+  const handleFollowed = (isFollowState:boolean) => {
+    if(userData == null) return;
+    if(userData.IS_FOLLOWING == "0"){
+      setFollowed(isFollowState ? 0 : 1);
+    }else{
+      setFollowed(isFollowState ? -1 : 0);
+    }
+    
+  }
   if (!userData) {
     return (
     <Box padding='6' boxShadow='lg' bg='white'>
@@ -32,7 +43,7 @@ const UserProfileComponent:React.FC<Props> = ({userData}) => {
           <Avatar size="lg" src="アイコンのURL" /> {/* アイコンを大きく */}
         </Box>
         {userData.IS_SELF == "0" && userData.IS_FOLLOWING != null && (
-           <FollowCardComponent isFollow={userData.IS_FOLLOWING} userId={userData.USER_ID} />
+           <FollowCardComponent isFollow={userData.IS_FOLLOWING} userId={userData.USER_ID} handleFollowed={handleFollowed} />
         )}
       </Flex>
 
@@ -47,10 +58,10 @@ const UserProfileComponent:React.FC<Props> = ({userData}) => {
       {/* フォロー数とフォロワー数 */}
       <Flex>
         <Text fontSize="sm" color="gray.500" mr={4}>
-          フォロー {userData.FOLLOWING_COUNT}
+          フォロー {Number(userData.FOLLOWING_COUNT)}
         </Text>
         <Text fontSize="sm" color="gray.500">
-          フォロワー {userData.FOLLOWER_COUNT}
+          フォロワー {Number(userData.FOLLOWER_COUNT) + isFollowed}
         </Text>
       </Flex>
     </Flex>
