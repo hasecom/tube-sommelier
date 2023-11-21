@@ -69,7 +69,6 @@ export const FollowCardComponent: React.FC<Props> = ({ isFollow, userId, handleF
     </>
   )
 }
-
 const useOpenModal = () => {
   const [showModal, setShowModal] = useState(false);
   const [animateFlag, setAnimateFlag] = useState(false);

@@ -29,3 +29,6 @@ export type UserData = {
   IS_FOLLOWED_BY:string | null,
   IS_SELF:string | null
 }
+export type ListItem =  {
+  TAB_TITLE:string
+}

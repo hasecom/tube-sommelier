@@ -1,12 +1,23 @@
 import { useState } from 'react';
 import { Avatar, Box, Button, Flex, Heading, Text, SkeletonCircle, SkeletonText} from '@chakra-ui/react';
-import { UserData } from './userPageType';
+import { UserData,ListItem } from './userPageType';
 import { FollowCardComponent } from '../userActionComponents/followCardComponent';
+import ListModalComponent from '@/components/modalComponents/listModalComponent'
 type Props = {
   userData:UserData | null,
 }
+
+const lists:ListItem[] = [
+  {
+    TAB_TITLE:"フォロー"
+  },
+  {
+    TAB_TITLE:"フォロワー"
+  }
+]
 const UserProfileComponent:React.FC<Props> = ({userData}) => {
   const [isFollowed, setFollowed] = useState(0);
+  const [showListModal,setShowListModal] = useState(false);
   const handleFollowed = (isFollowState:boolean) => {
     if(userData == null) return;
     if(userData.IS_FOLLOWING == "0"){
@@ -28,43 +39,39 @@ const UserProfileComponent:React.FC<Props> = ({userData}) => {
     <>
  <Flex
       direction="column"
-      align="start" // ユーザ名、ユーザIDを左端に寄せる
+      align="start"
       justify="center"
-      p={4} // 全体にパディングを追加
-      bg="white" // 背景を白に
+      p={4}
+      bg="white"
     >
-      {/* アイコンとフォロー中ボタン */}
       <Flex
-        width="100%" // 親要素の幅に合わせる
-        justifyContent="space-between" // アイコンとボタンを左右に配置
-        mb={4} // 下部にマージンを追加
+        width="100%"
+        justifyContent="space-between"
+        mb={4}
       >
         <Box>
-          <Avatar size="lg" src="アイコンのURL" /> {/* アイコンを大きく */}
+          <Avatar size="lg" src="アイコンのURL" />
         </Box>
         {userData.IS_SELF == "0" && userData.IS_FOLLOWING != null && (
            <FollowCardComponent isFollow={userData.IS_FOLLOWING} userId={userData.USER_ID} handleFollowed={handleFollowed} />
         )}
       </Flex>
-
-      {/* ユーザー名 */}
       <Heading mb={2}>{userData.USER_NAME }</Heading>
-
-      {/* ユーザーID */}
       <Text mb={4} color="gray.500">
         {"@"+userData.USER_ID}
       </Text>
-
-      {/* フォロー数とフォロワー数 */}
       <Flex>
-        <Text fontSize="sm" color="gray.500" mr={4}>
+        <Text fontSize="sm" color="gray.500" mr={4} onClick={()=>{setShowListModal(true)}} >
           フォロー {Number(userData.FOLLOWING_COUNT)}
         </Text>
-        <Text fontSize="sm" color="gray.500">
+        <Text fontSize="sm" color="gray.500" onClick={()=>{setShowListModal(true)}}>
           フォロワー {Number(userData.FOLLOWER_COUNT) + isFollowed}
         </Text>
       </Flex>
     </Flex>
+    {showListModal && (
+      <ListModalComponent lists={lists} showListModal={showListModal} setShowListModal={setShowListModal} />
+    )}
     </>
   )
 }
