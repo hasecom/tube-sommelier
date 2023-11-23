@@ -70,7 +70,7 @@ const UserProfileComponent:React.FC<Props> = ({userData}) => {
       </Flex>
     </Flex>
     {showListModal && (
-      <ListModalComponent lists={lists} showListModal={showListModal} setShowListModal={setShowListModal} />
+      <ListModalComponent lists={lists} userId={userData.USER_ID} showListModal={showListModal} setShowListModal={setShowListModal} />
     )}
     </>
   )

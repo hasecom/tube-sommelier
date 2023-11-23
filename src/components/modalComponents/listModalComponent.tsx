@@ -8,12 +8,15 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { ListItem } from '@/components/userPageComponents/userPageType'
 import 'swiper/css';
 
+import UserListCardComponent from '@/components/cardComponents/userListCardComponent';
+import { UserListProvider } from '@/providers/userListProvider';
 type Props = {
   lists:ListItem[],
+  userId:string,
   showListModal: boolean,
   setShowListModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const ListModalComponent: React.FC<Props> = ({ lists, showListModal, setShowListModal }) => {
+const ListModalComponent: React.FC<Props> = ({ lists,userId, showListModal, setShowListModal }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [tabIndex, setTabIndex] = useState(0);
   const swiperRefs = useRef<Array<Swiper | null>>([null, null]);
@@ -33,7 +36,6 @@ const ListModalComponent: React.FC<Props> = ({ lists, showListModal, setShowList
     onClose();
     setShowListModal(false);
   }
- 
   return (
     <>
       <Modal onClose={closeModal} isOpen={isOpen} scrollBehavior="inside">
@@ -55,7 +57,11 @@ const ListModalComponent: React.FC<Props> = ({ lists, showListModal, setShowList
             >
                 <TabPanel key={0}>
                   <SwiperSlide key={0}>
-                    <ModalBody>Content for Tab 1</ModalBody>
+                    <ModalBody>
+                      <UserListProvider userId={userId} apiEndpoint="api/list/follow" >
+                        <UserListCardComponent />
+                      </UserListProvider>
+                      </ModalBody>
                   </SwiperSlide>
                 </TabPanel>
                 <TabPanel key={1}>
