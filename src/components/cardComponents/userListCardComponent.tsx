@@ -18,7 +18,7 @@ const UserListCardComponent: React.FC = () => {
     )
   }
   return (
-    <div>
+    <>
     {userList ?
     userList.map(user => (
     <div className="flow-root" key={user.USER_ID}>
@@ -45,7 +45,7 @@ const UserListCardComponent: React.FC = () => {
       </ul>
     </div>
     )):null}
-    </div>
+    </>
     )}
 
 export default UserListCardComponent;
