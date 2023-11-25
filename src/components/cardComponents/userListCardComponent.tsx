@@ -1,4 +1,5 @@
 import { useEffect, useContext } from "react"
+import { useRouter } from 'next/navigation';
 import { Stack, Skeleton, SkeletonCircle, SkeletonText } from '@chakra-ui/react'
 import { UserListContext } from '@/providers/userListProvider';
 import { UserList } from '@/components/cardComponents/cardListType';
@@ -8,6 +9,10 @@ type Props = {
 }
 const UserListCardComponent: React.FC = () => {
   const userList = useContext<UserList[] | null>(UserListContext);
+  const router = useRouter();
+  const profileClickHandle = (userId:string) => {
+    router.push("/profile/"+userId,{ scroll: false });
+  }
   if (!userList) {
     return (
       <Stack>
@@ -15,6 +20,10 @@ const UserListCardComponent: React.FC = () => {
         <Skeleton height='20px' />
         <Skeleton height='20px' />
       </Stack>
+    )
+  }else if(userList.length == 0){
+    return (
+      <div>ユーザが見つかりません。</div>
     )
   }
   return (
@@ -28,7 +37,7 @@ const UserListCardComponent: React.FC = () => {
             <div className="flex-shrink-0">
               <img className="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-1.jpg" alt="Neil image" />
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0"  onClick={()=>profileClickHandle(user.USER_ID)}>
               <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
                 {user.USER_NAME}
               </p>
@@ -36,7 +45,7 @@ const UserListCardComponent: React.FC = () => {
                 {user.USER_ID}
               </p>
             </div>
-            {user.IS_FOLLOW != null && (
+            {user.IS_SELF == "0" && user.IS_FOLLOW != null && (
             <FollowCardComponent isFollow={user.IS_FOLLOW} userId={user.USER_ID} handleFollowed={(isFollowState) => {}}
             />
            )}

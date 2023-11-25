@@ -13,11 +13,11 @@ import { UserListProvider } from '@/providers/userListProvider';
 type Props = {
   page:number
   lists:ListItem[],
-  userId:string,
+  requestId:string,
   showListModal: boolean,
   setShowListModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const ListModalComponent: React.FC<Props> = ({page, lists,userId, showListModal, setShowListModal }) => {
+const ListModalComponent: React.FC<Props> = ({page, lists,requestId, showListModal, setShowListModal }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [tabIndex, setTabIndex] = useState(0);
   const swiperRefs = useRef<Array<Swiper | null>>([null, null]);
@@ -60,25 +60,18 @@ const ListModalComponent: React.FC<Props> = ({page, lists,userId, showListModal,
               slidesPerView={1}
               initialSlide={page}
               onSlideChange={(swiper) => handleSlideChange(swiper.activeIndex)}
-            >
-                <TabPanel key={0}>
-                  <SwiperSlide key={0}>
+            > 
+            {lists.map((list:ListItem,listIndex:number) => (
+                <TabPanel key={listIndex}>
+                  <SwiperSlide key={listIndex}>
                     <ModalBody>
-                      <UserListProvider userId={userId} apiEndpoint="api/list/follow" >
-                        <UserListCardComponent />
-                      </UserListProvider>
-                      </ModalBody>
-                  </SwiperSlide>
-                </TabPanel>
-                <TabPanel key={1}>
-                  <SwiperSlide key={1}>
-                    <ModalBody>
-                      <UserListProvider userId={userId} apiEndpoint="api/list/follower" >
+                      <UserListProvider requestId={requestId} apiEndpoint={list.API_ENDPOINT} >
                         <UserListCardComponent />
                       </UserListProvider>
                     </ModalBody>
                   </SwiperSlide>
-                </TabPanel>
+                </TabPanel>             
+            ))}
                 </Swiper>
               </TabPanels>
           </Tabs>

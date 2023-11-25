@@ -9,10 +9,12 @@ type Props = {
 
 const lists:ListItem[] = [
   {
-    TAB_TITLE:"フォロー"
+    TAB_TITLE:"フォロー",
+    API_ENDPOINT:'api/list/follow'
   },
   {
-    TAB_TITLE:"フォロワー"
+    TAB_TITLE:"フォロワー",
+    API_ENDPOINT:'api/list/follower'
   }
 ]
 const UserProfileComponent:React.FC<Props> = ({userData}) => {
@@ -74,7 +76,7 @@ const UserProfileComponent:React.FC<Props> = ({userData}) => {
       </Flex>
     </Flex>
     {showListModal && (
-      <ListModalComponent page={page} lists={lists} userId={userData.USER_ID} showListModal={showListModal} setShowListModal={setShowListModal} />
+      <ListModalComponent page={page} lists={lists} requestId={userData.USER_ID} showListModal={showListModal} setShowListModal={setShowListModal} />
     )}
     </>
   )

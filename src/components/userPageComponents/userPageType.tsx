@@ -30,5 +30,6 @@ export type UserData = {
   IS_SELF:string | null
 }
 export type ListItem =  {
-  TAB_TITLE:string
+  TAB_TITLE:string,
+  API_ENDPOINT:string
 }

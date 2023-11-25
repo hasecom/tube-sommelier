@@ -5,14 +5,14 @@ import { UserList } from '@/components/cardComponents/cardListType';
 const UserListContext = createContext<UserList[] | null>(null);
 type userListProvider =  {
   children:React.ReactNode,
-  userId:string,
+  requestId:string,
   apiEndpoint:string
 }
-const  UserListProvider = ({ children,userId,apiEndpoint }:userListProvider)=>{
+const  UserListProvider = ({ children,requestId,apiEndpoint }:userListProvider)=>{
   const [page, setPage] = useState(0);
   const [oldGodBodyHeight,setOldGodBodyHeight] = useState(0);
   const [scrollY, setScrollY] = useState(0);
-  const userList =useGetUserList({userId, page, apiEndpoint});
+  const userList =useGetUserList({requestId, page, apiEndpoint});
   
   const handleScroll = (e) => {
     // スクロール位置を取得して state を更新
@@ -36,19 +36,19 @@ const  UserListProvider = ({ children,userId,apiEndpoint }:userListProvider)=>{
 export {UserListProvider,UserListContext}
 
 type UseGetUserList = {
-  userId:string,
+  requestId:string,
   page:number,
   apiEndpoint:string
 }
 type requestDataProps =  {
-  userId:string,
+  requestId:string,
   page:number
 }
-const useGetUserList = ({userId,page,apiEndpoint}:UseGetUserList) =>  {
+const useGetUserList = ({requestId,page,apiEndpoint}:UseGetUserList) =>  {
   const [userList,setUserList] = useState<UserList[] | null>(null);
   useEffect(() => {
     const fetchData = async () => {
-    const response = await requestDataWithUserAuth<requestDataProps>({'userId':userId,'page':page},apiEndpoint);
+    const response = await requestDataWithUserAuth<requestDataProps>({'requestId':requestId,'page':page},apiEndpoint);
     if(response && response.data){ 
       const responseData = response.data;
       if(responseData['CODE'] && responseData['CODE'] == "1"){
@@ -58,8 +58,9 @@ const useGetUserList = ({userId,page,apiEndpoint}:UseGetUserList) =>  {
         }else{
           setUserList(responseData['RESULT']['USERS']);
         }
-        
         return;
+      }else{
+        setUserList([]);
       }
     }
   }
