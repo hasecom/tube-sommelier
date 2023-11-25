@@ -37,7 +37,7 @@ const UserListCardComponent: React.FC = () => {
               </p>
             </div>
             {user.IS_FOLLOW != null && (
-           <FollowCardComponent isFollow={user.IS_FOLLOW} userId={user.USER_ID} handleFollowed={(isFollowState) => {}}
+            <FollowCardComponent isFollow={user.IS_FOLLOW} userId={user.USER_ID} handleFollowed={(isFollowState) => {}}
             />
            )}
           </div>

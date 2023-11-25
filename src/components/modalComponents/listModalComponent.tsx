@@ -11,12 +11,13 @@ import 'swiper/css';
 import UserListCardComponent from '@/components/cardComponents/userListCardComponent';
 import { UserListProvider } from '@/providers/userListProvider';
 type Props = {
+  page:number
   lists:ListItem[],
   userId:string,
   showListModal: boolean,
   setShowListModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const ListModalComponent: React.FC<Props> = ({ lists,userId, showListModal, setShowListModal }) => {
+const ListModalComponent: React.FC<Props> = ({page, lists,userId, showListModal, setShowListModal }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [tabIndex, setTabIndex] = useState(0);
   const swiperRefs = useRef<Array<Swiper | null>>([null, null]);
@@ -26,11 +27,15 @@ const ListModalComponent: React.FC<Props> = ({ lists,userId, showListModal, setS
       swiperRefs.current[1]?.slideTo(index);
     }
   };
+  const handleSlideChange = (index: number) => {
+    setTabIndex(index);
+  };
   useEffect(() => {
     if (showListModal) {
       onOpen();
     }
   }, [showListModal]);
+
   const closeModal = () => {
     setTabIndex(0);
     onClose();
@@ -53,7 +58,8 @@ const ListModalComponent: React.FC<Props> = ({ lists,userId, showListModal, setS
               onSwiper={(swiper) => (swiperRefs.current[1] = swiper)}
               spaceBetween={10}
               slidesPerView={1}
-              onSlideChange={(swiper) => handleTabChange(swiper.activeIndex)}
+              initialSlide={page}
+              onSlideChange={(swiper) => handleSlideChange(swiper.activeIndex)}
             >
                 <TabPanel key={0}>
                   <SwiperSlide key={0}>
@@ -66,14 +72,18 @@ const ListModalComponent: React.FC<Props> = ({ lists,userId, showListModal, setS
                 </TabPanel>
                 <TabPanel key={1}>
                   <SwiperSlide key={1}>
-                    <ModalBody>Content for Tab 2</ModalBody>
+                    <ModalBody>
+                      <UserListProvider userId={userId} apiEndpoint="api/list/follower" >
+                        <UserListCardComponent />
+                      </UserListProvider>
+                    </ModalBody>
                   </SwiperSlide>
                 </TabPanel>
                 </Swiper>
               </TabPanels>
           </Tabs>
           <ModalFooter>
-            <Button onClick={closeModal}>Close</Button>
+            <Button onClick={closeModal}>閉じる</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -18,6 +18,11 @@ const lists:ListItem[] = [
 const UserProfileComponent:React.FC<Props> = ({userData}) => {
   const [isFollowed, setFollowed] = useState(0);
   const [showListModal,setShowListModal] = useState(false);
+  const [page,setPage] = useState(0);
+  const handleFollowButton = (argPage:number) => {
+    setPage(argPage);
+    setShowListModal(true);
+  }
   const handleFollowed = (isFollowState:boolean) => {
     if(userData == null) return;
     if(userData.IS_FOLLOWING == "0"){
@@ -25,7 +30,6 @@ const UserProfileComponent:React.FC<Props> = ({userData}) => {
     }else{
       setFollowed(isFollowState ? -1 : 0);
     }
-    
   }
   if (!userData) {
     return (
@@ -61,16 +65,16 @@ const UserProfileComponent:React.FC<Props> = ({userData}) => {
         {"@"+userData.USER_ID}
       </Text>
       <Flex>
-        <Text fontSize="sm" color="gray.500" mr={4} onClick={()=>{setShowListModal(true)}} >
+        <Text fontSize="sm" color="gray.500" mr={4} onClick={()=>{handleFollowButton(0)}} >
           フォロー {Number(userData.FOLLOWING_COUNT)}
         </Text>
-        <Text fontSize="sm" color="gray.500" onClick={()=>{setShowListModal(true)}}>
+        <Text fontSize="sm" color="gray.500" onClick={()=>{handleFollowButton(1)}}>
           フォロワー {Number(userData.FOLLOWER_COUNT) + isFollowed}
         </Text>
       </Flex>
     </Flex>
     {showListModal && (
-      <ListModalComponent lists={lists} userId={userData.USER_ID} showListModal={showListModal} setShowListModal={setShowListModal} />
+      <ListModalComponent page={page} lists={lists} userId={userData.USER_ID} showListModal={showListModal} setShowListModal={setShowListModal} />
     )}
     </>
   )

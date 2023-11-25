@@ -52,7 +52,6 @@ const useGetUserList = ({userId,page,apiEndpoint}:UseGetUserList) =>  {
     if(response && response.data){ 
       const responseData = response.data;
       if(responseData['CODE'] && responseData['CODE'] == "1"){
-        console.log(userList);
         if(page !== 0 &&  userList){//0(初回ロード以外)
           const additionUserList = responseData['RESULT']['USERS'];
           setUserList([...userList, ...additionUserList]);
