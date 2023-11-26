@@ -2,7 +2,7 @@ import { useRouter } from 'next/navigation';
 import { Card, Center, CardHeader, CardBody, CardFooter, Flex, Avatar, Box, IconButton, Text, Image, Heading, Button } from '@chakra-ui/react'
 import { playlistData } from '@/components/userPageComponents/userPageType';
 import { LikeCardComponent } from '../userActionComponents/likeCardComponent';
-
+import CommentComponent from '@/components/commentComponents/commentComponent'
 type Props = {
   'playlist': playlistData
 }
@@ -74,9 +74,8 @@ const PostCardComponent: React.FC<Props> = ({ playlist }) => {
             },
           }}
         >     
-          
-            <LikeCardComponent likeCount={playlist.LIKE_COUNT} playlistUid={playlist.PLAYLIST_UID} isLiked={playlist.IS_LIKED} />
-          <Button flex='1' variant='ghost' >コメント  {playlist.COMMENT_COUNT}件</Button>
+          <LikeCardComponent likeCount={playlist.LIKE_COUNT} playlistUid={playlist.PLAYLIST_UID} isLiked={playlist.IS_LIKED} />
+          <CommentComponent commentCount={playlist.COMMENT_COUNT} playlistUid={playlist.PLAYLIST_UID} />
           <Button flex='1' variant='ghost'>Share  </Button>
         </CardFooter>
       </Card>
