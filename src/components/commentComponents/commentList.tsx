@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Textarea, Button, VStack, Box, CloseButton } from '@chakra-ui/react';
 import { requestDataWithUserAuth } from '@/func/axios'
+import PopupModal from '@/components/popupModal';
+import CommentListMaps  from '@/components/commentComponents/commentListMaps';
 type props = {
   showPostView: boolean,
   timestamp: number,
@@ -15,7 +17,6 @@ type requestDataProps  = {
   message:string,
   playlistUid:string
 }
-
 const CommentList: React.FC<props> = (
   {
     showPostView,
@@ -32,6 +33,8 @@ const CommentList: React.FC<props> = (
   const [regComment,setRegComment] = useState('');
   const [svErrorFlag,setSvErrorFlag] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const { showModal,animateFlag,handleOpenModal } = useOpenModal();
+
   const handleChange = (e) => {
     if(svErrorFlag){
       setErrorMessage('');
@@ -68,7 +71,8 @@ const CommentList: React.FC<props> = (
       if(responseData['CODE'] && responseData['CODE'] == "1"){
         setSvErrorFlag(false);
         setErrorMessage('');
-        console.log(responseData);
+        setComment('');
+        handleOpenModal();
         return;
       }
       setSvErrorFlag(true);
@@ -81,13 +85,14 @@ const CommentList: React.FC<props> = (
 }
   return (
     <>
+      {showModal && <PopupModal popupMessage={'コメントを追加しました。' } reverseAnimate={animateFlag} />}
       <div className="relative w-full h-full">
         <div className={`${showPostView ? 'animate-slide-in-bottom' : 'animate-slide-out-bottom'}  z-30 bg-white w-full fixed  bottom-0 h-3/4 left-0 right-0 p-3`}>
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-gray-500">コメントを追加</span>
             <CloseButton />
           </div>
-          <Textarea placeholder='ここにコメントを入力（120文字以内）' size="sm" resize="none" p={2} onChange={handleChange} />
+          <Textarea placeholder='ここにコメントを入力（120文字以内）' size="sm" resize="none" value={comment} p={2} onChange={handleChange} />
           <div className="text-right p-2">
             <Button
               colorScheme="red"
@@ -104,17 +109,37 @@ const CommentList: React.FC<props> = (
             </div>
           }
           <VStack spacing={4} overflowY="auto" maxHeight="calc(100% - 64px)">
-            {/* 仮のコメントリスト */}
-            {[...Array(10)].map((_, index) => (
-              <Box key={index} border="1px" borderColor="gray.200" p={4} rounded="md">
-                <span>ユーザ名:</span>
-                <p>コメントの内容がここに表示されます。</p>
-              </Box>
-            ))}
+            <CommentListMaps  playlistUid={playlistUid} />
           </VStack>
         </div>
       </div>
     </>
   );
+}
+const useOpenModal = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [animateFlag, setAnimateFlag] = useState(false); 
+  const handleOpenModal = () =>  {
+    setShowModal(true);
+  }
+  useEffect(()=>{
+    if(!showModal) return;
+    const handleAnimate = setTimeout(() => {
+      setAnimateFlag(true);
+    }, 1000);
+    const closeModal = setTimeout(() => {
+      setShowModal(false);
+      setAnimateFlag(false);
+    }, 2000);
+    return () => {
+      clearTimeout(handleAnimate);
+      clearTimeout(closeModal);
+    };
+  },[showModal]);
+  return {
+    showModal,
+    animateFlag,
+    handleOpenModal
+  }
 }
 export default CommentList;
