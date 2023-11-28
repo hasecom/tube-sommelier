@@ -1,5 +1,5 @@
 # はじめてのNext.js
-
+(+ はじめてのtypescript)
   
   
 
@@ -10,7 +10,7 @@
 ## 環境
 - データベース：MySql
 - バックエンド：PHP 7.4
-- フロントエンド：Next.js
+- フロントエンド：Next.js (tsx)
 - ユーザインタフェース：Chakra UI / Swiper
 - デザイン：Tailwind.css
 - パッケージ管理：npm /  Composer
