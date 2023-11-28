@@ -20,6 +20,7 @@ const CommentComponent:React.FC<Props> = ({commentCount,playlistUid}) => {
   const [isEdit,setIsEdit] = useState(false);
   const [timestamp,setTimestamp] = useState(0);
   const toggleView = () => { //投稿画面開閉
+    document.body.style.overflow = showPostView ? 'hidden' :  'auto';
     setShowPostView(!showPostView);
     setAnimation(!animation);
     setTimestamp(Date.now())
@@ -47,7 +48,7 @@ const CommentComponent:React.FC<Props> = ({commentCount,playlistUid}) => {
     setModalView(false)
     closeViews();
   }
-  const onOpenModal = () => {//警告モーダルを開く
+  const onOpenModal = () => {//モーダルを開く
     if(isEdit){
       setModalView(true)
     }else{

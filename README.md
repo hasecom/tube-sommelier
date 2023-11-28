@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# はじめてのNext.js
 
-## Getting Started
+  
+  
 
-First, run the development server:
+動画プレイリスト共有サービス作成（一部未実装）
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+(利用規約に抵触する恐れがあり断念)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 環境
+- データベース：MySql
+- バックエンド：PHP 7.4
+- フロントエンド：Next.js
+- ユーザインタフェース：Chakra UI / Swiper
+- デザイン：Tailwind.css
+- パッケージ管理：npm /  Composer
+- API：YouTube Data API v3
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 実装機能
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### 認証
+ステートレス認証をすべく、JWT認証を採用。
+ユーザ認証時、公開鍵暗号方式（RS256使用)において、デジタル署名を行なったアクセストークンをCookieにセット、リフレッシュトークンは、データベースにセット。
+アクセストークンは30分、リフレッシュトークンは12日間を有効期限とし、アクセストークンのみ期限が切れた場合は、リフレッシュトークンによってアクセストークンを再発行する。リフレッシュトークンの有効期限が切れた場合は、ログインによりトークンを再発行する。
 
-## Learn More
+リクエストごとに、アクセストークンによる本人証明かつ改ざん検知を行なった。
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+withCredentials=trueとし、非ログインユーザ/ログインユーザ/自分自身を分岐処理。
+- ログイン
+- 新規登録
+- 各種リクエスト処理
